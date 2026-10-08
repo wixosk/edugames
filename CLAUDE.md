@@ -10,6 +10,12 @@ self-contained `index.html` (inline CSS + JS, no build step).
   Web Audio for sound, `speechSynthesis` for voice, and `localStorage` for progress.
   Touch-first: designed for phones/tablets in landscape or portrait.
 
+## Deploying
+
+`.github/workflows/pages.yml` publishes to GitHub Pages on every push to `main`:
+the root `index.html` (game list) plus each top-level folder that has an `index.html`.
+When adding a game, add a link to it in the root `index.html`.
+
 ## Running
 
 No dependencies beyond Python 3:
