@@ -7,7 +7,13 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Edu Games">
+<meta name="theme-color" content="#06283d">
+<meta name="build" content="__BUILD__">
 <title>Edu Games</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
 <style>
   :root { --ink: #1d3557; --paper: #fff8e7; --sea: #06283d; --sea2: #0b3c5d; --yellow: #ffd166; --green: #06d6a0;
     --blue: #8ecae6; --pink: #f4a3c4; }
@@ -19,7 +25,7 @@
     -webkit-tap-highlight-color: transparent; }
   .wrap { max-width: 960px; margin: 0 auto; }
   header { display: flex; align-items: center; gap: 14px; color: var(--paper); margin: 8px 4px 24px; }
-  header .logo { font-size: 44px; line-height: 1; }
+  header .logo { width: 60px; height: 60px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,.3); }
   header h1 { margin: 0; font-size: clamp(30px, 6vw, 44px); letter-spacing: -.5px; }
   header p { margin: 2px 0 0; opacity: .7; font-size: 17px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 18px; }
@@ -49,12 +55,13 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px; min-height: 220px; }
   .soon .big { font-size: 48px; opacity: .8; }
   .soon p { margin: 8px 0 0; opacity: .7; font-size: 17px; }
+  footer { margin: 28px 4px 0; color: var(--paper); opacity: .35; font-size: 13px; text-align: center; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="logo">🎲</div>
+    <img class="logo" src="icons/icon.svg" alt="">
     <div>
       <h1>Edu Games</h1>
       <p>Little games for big math skills.</p>
@@ -86,6 +93,7 @@
       <p>New adventures are being built.</p>
     </div>
   </main>
+  <footer>build __BUILD__</footer>
 </div>
 
 <script>
@@ -104,5 +112,6 @@
     card.querySelector('.play').textContent = 'Keep sailing ⛵';
   })();
 </script>
+<script src="update.js"></script>
 </body>
 </html>

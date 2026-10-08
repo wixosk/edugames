@@ -6,7 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="build" content="__BUILD__">
 <title>Kraken Crossing</title>
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="../icons/favicon-32.png" sizes="32x32" type="image/png">
 <style>
   html, body { margin: 0; height: 100%; overflow: hidden; background: #06283d; touch-action: none;
     -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; overscroll-behavior: none;
@@ -19,6 +23,7 @@
     box-shadow: 0 20px 60px rgba(0,0,0,.4); box-sizing: border-box; }
   h1 { margin: 0 0 4px; font-size: 40px; }
   .crumb { display: inline-block; margin: 0 0 6px; color: inherit; opacity: .6; font-size: 16px; font-weight: 700; text-decoration: none; }
+  .crumb img { width: 18px; height: 18px; border-radius: 5px; vertical-align: -3px; }
   h2 { margin: 0 0 12px; font-size: 34px; }
   .sub { margin: 0 0 20px; opacity: .75; font-size: 17px; }
   .levels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -55,7 +60,7 @@
 
 <div id="menu" class="overlay">
   <div class="card">
-    <a class="crumb" href="../">🎲 Edu Games ›</a>
+    <a class="crumb" href="../"><img src="../icons/icon.svg" alt=""> Edu Games ›</a>
     <h1>🐙 Kraken Crossing</h1>
     <p class="sub">Steer your boat to the right number and the kraken lets you through.</p>
     <div class="levels">
@@ -593,6 +598,7 @@
   }
 
   function startRound() {
+    setPlaying(true);
     S.problems = pickRound(settings.level, ROUND_LEN);
     S.pIndex = 0; S.stars = 0; S.streak = 0; S.tricky = []; S.requeued = new Set(); timers = [];
     clearFx();
@@ -709,14 +715,14 @@
     const uniq = [...new Set(S.tricky)];
     document.getElementById('sumTricky').textContent = uniq.length
       ? `Tricky ones to practise: ${uniq.join(',  ')}` : 'No mistakes. What a captain!';
-    show('summary', true);
+    show('summary', true); setPlaying(false);
   }
 
   function toMenu() {
     S.phase = 'idle'; timers = []; gate.active = false; drawCrossing(); clearFx();
     S.step = null; drawNumberLine();
     setEquation(null);
-    show('go', false); show('quit', false); show('summary', false); show('menu', true);
+    show('go', false); show('quit', false); show('summary', false); show('menu', true); setPlaying(false);
   }
 
   // ---------------------------------------------------------------- input
@@ -812,6 +818,8 @@
 
   // ---------------------------------------------------------------- DOM wiring
   function show(id, on) { document.getElementById(id).classList.toggle('hidden', !on); }
+  // Hide the update pill during play; it shows again on the menu / summary.
+  const setPlaying = on => document.body.classList.toggle('playing', on);
   const tTimer = document.getElementById('tTimer');
   function renderToggles() {
     tTimer.textContent = settings.timer ? '⏱ Timer: on' : '⏱ Timer: off';
@@ -841,5 +849,6 @@
   window.__game = { S, save, settings, surprises, celebrate, boat, L: () => L }; // debug handle
 })();
 </script>
+<script src="../update.js"></script>
 </body>
 </html>

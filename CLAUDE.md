@@ -12,20 +12,29 @@ self-contained `index.html` (inline CSS + JS, no build step).
 
 ## Deploying
 
-`.github/workflows/pages.yml` publishes to GitHub Pages on every push to `main`:
-the root `index.html` (game list) plus each top-level folder that has an `index.html`.
-When adding a game, add a link to it in the root `index.html`.
+`.github/workflows/pages.yml` publishes to GitHub Pages on every push to `main`: every tracked
+file except `.github/`, `CLAUDE.md` and `.claude/` folders. When adding a game, add a card for it
+in the root `index.html`.
+
+The deploy replaces `__BUILD__` in all HTML with the short commit hash and writes `version.json`.
+`update.js` (included by every page) compares the two and shows a "New version · tap to update"
+pill, which reloads with `?v=<hash>` to skip the Pages HTML cache. Games add `body.playing`
+during a round to hide the pill. New games should include `<meta name="build" content="__BUILD__">`,
+`<script src="../update.js">`, and the `../icons/` icon links.
+
+Icons: `icons/icon.svg` is the source; PNGs (apple-touch-icon 180, 192, 512, favicon 32) are
+rendered from it with headless Chromium. `manifest.webmanifest` makes the dashboard installable.
 
 ## Running
 
 No dependencies beyond Python 3:
 
 ```bash
-cd factorun && python3 -m http.server 8765 --bind 0.0.0.0
-# open http://localhost:8765
+python3 -m http.server 8765 --bind 0.0.0.0   # from the repo root (games use ../update.js, ../icons/)
+# open http://localhost:8765/ (dashboard) or /factorun/
 ```
 
-`factorun/.claude/launch.json` holds the same config for the Claude preview pane.
+Locally `__BUILD__` isn't stamped, so the update check stays off.
 
 ## Checking changes
 

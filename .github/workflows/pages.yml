@@ -24,12 +24,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Assemble site
         run: |
+          # Every tracked file except repo tooling/docs; then stamp the build hash for the update check.
           mkdir _site
-          cp index.html _site/
-          for d in */; do
-            if [ "$d" != "_site/" ] && [ -f "$d/index.html" ]; then cp -r "$d" _site/; fi
-          done
-          rm -rf _site/*/.claude
+          git ls-files | grep -Ev '^(\.github/|\.gitignore$|CLAUDE\.md$|README|.*/\.claude/|\.claude/)' \
+            | xargs -I{} cp --parents {} _site/
+          v="${GITHUB_SHA::7}"
+          find _site -name '*.html' -exec sed -i "s/__BUILD__/$v/g" {} +
+          printf '{"v":"%s"}\n' "$v" > _site/version.json
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
       - id: deployment
