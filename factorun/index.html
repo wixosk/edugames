@@ -66,7 +66,6 @@
     </div>
     <div class="row">
       <button class="pill" id="tTimer"></button>
-      <button class="pill" id="tVoice"></button>
       <button class="link" id="reset">Reset progress</button>
     </div>
     <p class="note">
@@ -110,10 +109,20 @@
   try { const s = JSON.parse(localStorage.getItem(STORE)); if (s) save = Object.assign(save, s); } catch {}
   const persist = () => { try { localStorage.setItem(STORE, JSON.stringify(save)); } catch {} };
 
-  const settings = { level: 1, timer: false, voice: true };
+  const settings = { level: 1, timer: false };
 
-  // ---------------------------------------------------------------- audio + voice
+  // ---------------------------------------------------------------- audio
   let actx = null;
+  // iOS: Web Audio follows the ringer/silent switch unless the page asks for 'playback'.
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch {}
+  function unlockAudio() {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state !== 'running') actx.resume();
+    } catch {}
+  }
+  // Safari can leave the context 'suspended'/'interrupted' (calls, Siri, app switch), so re-resume on every touch.
+  ['pointerdown', 'touchend', 'keydown'].forEach(ev => window.addEventListener(ev, unlockAudio, { capture: true, passive: true }));
   function tone(f, d, type = 'sine', vol = .15, delay = 0) {
     if (!actx) return;
     const t = actx.currentTime + delay, o = actx.createOscillator(), g = actx.createGain();
@@ -142,18 +151,11 @@
     done: () => [523, 659, 784, 1046].forEach((f, i) => tone(f, .2, 'triangle', .16, i * .08)),
     splash: () => noise(.7, .35, 1400),
     bonk: () => { tone(320, .08, 'square', .12); slide(500, 1200, .3, 'triangle', .08, .08); },
-    boom: () => { noise(1, .6, 450); slide(120, 40, .6, 'sine', .35); },
+    boom: () => { noise(1, .6, 450); noise(.5, .45, 2500); slide(120, 40, .6, 'sine', .35); slide(420, 110, .45, 'square', .1); },
     zap: () => { noise(.35, .3, 5000); slide(1800, 200, .3, 'sawtooth', .07); },
-    rumble: () => slide(90, 50, .8, 'sawtooth', .06),
+    rumble: () => { slide(90, 50, .8, 'sawtooth', .06); slide(260, 150, .8, 'sawtooth', .07); noise(.8, .12, 600); },
     wahwah: () => [392, 370, 349, 311].forEach((f, i) => slide(f, f * .97, i === 3 ? .6 : .22, 'sawtooth', .05, i * .24)),
   };
-  function say(text) {
-    if (!settings.voice || !('speechSynthesis' in window)) return;
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US'; u.rate = .9; u.pitch = 1.1;
-    speechSynthesis.speak(u);
-  }
 
   // ---------------------------------------------------------------- scene graph
   const seaLayer = new PIXI.Container(), world = new PIXI.Container(), ui = new PIXI.Container();
@@ -580,14 +582,10 @@
 
   function buildSteps(level, a, b) {
     const fill = 10 - a, r = b - fill, R = C.red, B = C.blue, Q = { q: true };
-    const bond = { kind: 'bond', eq: [{ t: a, c: R }, { t: '+' }, Q, { t: '=' }, { t: 10 }],
-      say: `${a} plus what makes ten?`, answer: fill, min: 0, max: 10, explain: `${a} and ${fill} make ten.` };
-    const split = { kind: 'split', eq: [{ t: b, c: B }, { t: '=' }, { t: fill, c: B }, { t: '+' }, Q],
-      say: `${b} is ${fill} and what? How many blue dots are left?`, answer: r, min: 0, max: 10, explain: `${b} is ${fill} and ${r}.` };
-    const total = { kind: 'total', eq: [{ t: 10 }, { t: '+' }, { t: r, c: B }, { t: '=' }, Q],
-      say: `ten plus ${r}?`, answer: 10 + r, min: 10, max: 20, explain: `Ten and ${r} is ${10 + r}.` };
-    const direct = { kind: 'direct', eq: [{ t: a, c: R }, { t: '+' }, { t: b, c: B }, { t: '=' }, Q],
-      say: `${a} plus ${b}?`, answer: a + b, min: 10, max: 20, explain: `${a} plus ${fill} makes ten. ${r} more makes ${a + b}.` };
+    const bond = { kind: 'bond', eq: [{ t: a, c: R }, { t: '+' }, Q, { t: '=' }, { t: 10 }], answer: fill, min: 0, max: 10 };
+    const split = { kind: 'split', eq: [{ t: b, c: B }, { t: '=' }, { t: fill, c: B }, { t: '+' }, Q], answer: r, min: 0, max: 10 };
+    const total = { kind: 'total', eq: [{ t: 10 }, { t: '+' }, { t: r, c: B }, { t: '=' }, Q], answer: 10 + r, min: 10, max: 20 };
+    const direct = { kind: 'direct', eq: [{ t: a, c: R }, { t: '+' }, { t: b, c: B }, { t: '=' }, Q], answer: a + b, min: 10, max: 20 };
     if (level === 1) return [bond];
     if (level === 2) return [bond, split, total];
     if (level === 3) return [bond, total];
@@ -632,7 +630,6 @@
     S.phase = 'approach';
     goBtn.disabled = false;
     drawNumberLine();
-    say(st.say);
   }
 
   function commit(byGo) {
@@ -677,7 +674,6 @@
         setEquation(st.eq, { value: st.answer, color: C.orange });
         drawNumberLine();
         visual(st.kind); if (settings.level === 3 && st.kind === 'bond') later(.7, () => visual('split'));
-        say(st.explain);
       });
       later(3.6, () => { S.sel = st.answer; drawNumberLine(); });
       later(4.2, () => { S.boost = 260; S.phase = 'pass'; });
@@ -720,7 +716,6 @@
     S.phase = 'idle'; timers = []; gate.active = false; drawCrossing(); clearFx();
     S.step = null; drawNumberLine();
     setEquation(null);
-    if ('speechSynthesis' in window) speechSynthesis.cancel();
     show('go', false); show('quit', false); show('summary', false); show('menu', true);
   }
 
@@ -817,21 +812,18 @@
 
   // ---------------------------------------------------------------- DOM wiring
   function show(id, on) { document.getElementById(id).classList.toggle('hidden', !on); }
-  const tTimer = document.getElementById('tTimer'), tVoice = document.getElementById('tVoice');
+  const tTimer = document.getElementById('tTimer');
   function renderToggles() {
     tTimer.textContent = settings.timer ? '⏱ Timer: on' : '⏱ Timer: off';
     tTimer.classList.toggle('on', settings.timer);
-    tVoice.textContent = settings.voice ? '🔊 Voice: on' : '🔇 Voice: off';
-    tVoice.classList.toggle('on', settings.voice);
   }
   tTimer.onclick = () => { settings.timer = !settings.timer; renderToggles(); };
-  tVoice.onclick = () => { settings.voice = !settings.voice; renderToggles(); };
   renderToggles();
   document.getElementById('reset').onclick = () => {
     if (confirm('Forget all progress and speed?')) { save = { stats: {}, approachT: 9 }; persist(); }
   };
   document.querySelectorAll('.lvl').forEach(b => b.onclick = () => {
-    try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume(); } catch {}
+    unlockAudio();
     settings.level = +b.dataset.level;
     show('menu', false);
     startRound();
@@ -841,7 +833,7 @@
   document.getElementById('quit').onclick = toMenu;
 
   window.addEventListener('resize', () => { app.resize(); layout(); });
-  document.addEventListener('visibilitychange', () => document.hidden ? app.ticker.stop() : app.ticker.start());
+  document.addEventListener('visibilitychange', () => { if (document.hidden) app.ticker.stop(); else { app.ticker.start(); unlockAudio(); } });
   document.addEventListener('gesturestart', e => e.preventDefault());
 
   ui.addChild(flash);

@@ -7,7 +7,7 @@ self-contained `index.html` (inline CSS + JS, no build step).
 
 - `factorun/` — **Kraken Crossing**: steer a boat along a number line to answer
   addition facts (make-10 bonds, bridging over 10). Uses PixiJS 8 from jsDelivr,
-  Web Audio for sound, `speechSynthesis` for voice, and `localStorage` for progress.
+  Web Audio for sound and `localStorage` for progress.
   Touch-first: designed for phones/tablets in landscape or portrait.
 
 ## Deploying
