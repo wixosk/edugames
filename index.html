@@ -33,7 +33,14 @@
   .art .boat { position: absolute; left: 18%; top: 30%; font-size: 44px; animation: bob 2.4s ease-in-out infinite; }
   .art .waves { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; color: rgba(255,255,255,.55); letter-spacing: 6px; font-size: 18px; }
   @keyframes bob { 50% { transform: translateY(6px) rotate(-4deg); } }
-  @media (prefers-reduced-motion: reduce) { .art .boat { animation: none; } }
+  .art.chase { background: linear-gradient(#9bd4f5 0 40%, #4a4e69 40% 92%, #8d99ae 92%); }
+  .art.chase .road { position: absolute; left: 0; right: 0; top: 64%; height: 4px;
+    background: repeating-linear-gradient(90deg, #fff 0 22px, transparent 22px 40px); opacity: .8; }
+  .art.chase .cop { position: absolute; left: 14%; top: 42%; font-size: 52px; transform: scaleX(-1); animation: zoom 1.6s ease-in-out infinite; }
+  .art.chase .robber { position: absolute; right: 14%; top: 30%; font-size: 52px; }
+  .art.chase .loot { position: absolute; right: 34%; top: 46%; font-size: 34px; }
+  @keyframes zoom { 50% { transform: scaleX(-1) translateX(-14px); } }
+  @media (prefers-reduced-motion: reduce) { .art .boat, .art.chase .cop { animation: none; } }
   .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
   .body h2 { margin: 0; font-size: 26px; }
   .body .desc { margin: 0; font-size: 16px; opacity: .8; line-height: 1.35; }
@@ -80,6 +87,24 @@
       </div>
     </a>
 
+    <a class="game" href="robber-chase/" id="robber">
+      <div class="art chase" aria-hidden="true">
+        <span class="road"></span>
+        <span class="cop">🚓</span>
+        <span class="loot">💰</span>
+        <span class="robber">🦹</span>
+      </div>
+      <div class="body">
+        <h2>Robber Chase</h2>
+        <p class="desc">Two robbers, two piles of loot. Catch the one with more!</p>
+        <div class="tags"><span class="tag">⚖️ More or less</span><span class="tag">🪙 Counting</span><span class="tag">Ages 3–5</span></div>
+        <div class="progress">
+          <small>No robbers caught yet. Sirens on!</small>
+        </div>
+        <span class="play">Play 🚓</span>
+      </div>
+    </a>
+
     <div class="soon">
       <div class="big">🧩</div>
       <b>More games coming soon</b>
@@ -102,6 +127,17 @@
     card.querySelector('.progress small').textContent =
       `${mastered} of ${total} facts mastered · ${keys.length} practised`;
     card.querySelector('.play').textContent = 'Keep sailing ⛵';
+  })();
+
+  // Robber Chase totals, from the game's own save.
+  (function () {
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem('robber-chase-v1')) || {}; } catch (e) {}
+    if (!s.caught) return;
+    const card = document.getElementById('robber');
+    card.querySelector('.progress small').textContent =
+      `${s.caught} robber${s.caught === 1 ? '' : 's'} caught · ${s.coins || 0} coins brought back`;
+    card.querySelector('.play').textContent = 'Keep chasing 🚓';
   })();
 </script>
 </body>
