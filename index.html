@@ -4,22 +4,105 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Edu Games">
 <title>Edu Games</title>
 <style>
-  body { margin: 0; min-height: 100vh; background: #06283d; color: #1d3557; display: flex; align-items: center;
-    justify-content: center; padding: 16px; box-sizing: border-box;
-    font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, sans-serif; }
-  .card { background: #fff8e7; border-radius: 28px; padding: 28px; max-width: 520px; width: 100%; box-sizing: border-box; }
-  h1 { margin: 0 0 16px; font-size: 36px; }
-  a { display: block; background: #ffd166; color: inherit; text-decoration: none; border-radius: 20px;
-    padding: 16px 18px; font-size: 22px; font-weight: 700; box-shadow: 0 4px 0 rgba(0,0,0,.15); }
-  a span { display: block; font-size: 15px; font-weight: 400; opacity: .85; margin-top: 4px; }
+  :root { --ink: #1d3557; --paper: #fff8e7; --sea: #06283d; --sea2: #0b3c5d; --yellow: #ffd166; --green: #06d6a0;
+    --blue: #8ecae6; --pink: #f4a3c4; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; min-height: 100vh; color: var(--ink); background: radial-gradient(ellipse at top, var(--sea2), var(--sea) 70%) fixed;
+    font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, sans-serif;
+    padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    -webkit-tap-highlight-color: transparent; }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  header { display: flex; align-items: center; gap: 14px; color: var(--paper); margin: 8px 4px 24px; }
+  header .logo { font-size: 44px; line-height: 1; }
+  header h1 { margin: 0; font-size: clamp(30px, 6vw, 44px); letter-spacing: -.5px; }
+  header p { margin: 2px 0 0; opacity: .7; font-size: 17px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 18px; }
+  .game { display: flex; flex-direction: column; background: var(--paper); border-radius: 28px; overflow: hidden;
+    color: inherit; text-decoration: none; box-shadow: 0 6px 0 rgba(0,0,0,.25), 0 20px 40px rgba(0,0,0,.25);
+    transition: transform .12s; }
+  .game:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,.25), 0 10px 20px rgba(0,0,0,.25); }
+  .art { height: 150px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .art.kraken { background: linear-gradient(#8ecae6 0 45%, #219ebc 45% 100%); }
+  .art .big { font-size: 78px; filter: drop-shadow(0 6px 0 rgba(0,0,0,.15)); }
+  .art .boat { position: absolute; left: 18%; top: 30%; font-size: 44px; animation: bob 2.4s ease-in-out infinite; }
+  .art .waves { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; color: rgba(255,255,255,.55); letter-spacing: 6px; font-size: 18px; }
+  @keyframes bob { 50% { transform: translateY(6px) rotate(-4deg); } }
+  @media (prefers-reduced-motion: reduce) { .art .boat { animation: none; } }
+  .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .body h2 { margin: 0; font-size: 26px; }
+  .body .desc { margin: 0; font-size: 16px; opacity: .8; line-height: 1.35; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: rgba(29,53,87,.08); }
+  .progress { margin-top: 2px; }
+  .bar { height: 12px; border-radius: 999px; background: rgba(29,53,87,.1); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: var(--green); transition: width .6s; }
+  .progress small { display: block; margin-top: 6px; font-size: 14px; opacity: .75; }
+  .play { margin-top: auto; align-self: flex-start; background: var(--green); color: var(--ink); font-weight: 800; font-size: 20px;
+    padding: 12px 22px; border-radius: 18px; box-shadow: 0 4px 0 rgba(0,0,0,.15); }
+  .soon { background: rgba(255,248,231,.08); border: 3px dashed rgba(255,248,231,.25); border-radius: 28px; color: var(--paper);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 28px; min-height: 220px; }
+  .soon .big { font-size: 48px; opacity: .8; }
+  .soon p { margin: 8px 0 0; opacity: .7; font-size: 17px; }
 </style>
 </head>
 <body>
-  <div class="card">
-    <h1>🎲 Edu Games</h1>
-    <a href="factorun/">🐙 Kraken Crossing<span>Make 10 and adding over 10 on a number line.</span></a>
-  </div>
+<div class="wrap">
+  <header>
+    <div class="logo">🎲</div>
+    <div>
+      <h1>Edu Games</h1>
+      <p>Little games for big math skills.</p>
+    </div>
+  </header>
+
+  <main class="grid">
+    <a class="game" href="factorun/" id="kraken">
+      <div class="art kraken" aria-hidden="true">
+        <span class="boat">⛵</span>
+        <span class="big">🐙</span>
+        <span class="waves">〰〰〰〰〰〰〰〰</span>
+      </div>
+      <div class="body">
+        <h2>Kraken Crossing</h2>
+        <p class="desc">Steer your boat to the right number and the kraken lets you through.</p>
+        <div class="tags"><span class="tag">➕ Addition</span><span class="tag">🔟 Make 10</span><span class="tag">Ages 5–7</span></div>
+        <div class="progress">
+          <div class="bar"><i></i></div>
+          <small>Not started yet. Set sail!</small>
+        </div>
+        <span class="play">Play ⛵</span>
+      </div>
+    </a>
+
+    <div class="soon">
+      <div class="big">🧩</div>
+      <b>More games coming soon</b>
+      <p>New adventures are being built.</p>
+    </div>
+  </main>
+</div>
+
+<script>
+  // Kraken Crossing progress, read from the game's own save (same origin).
+  // Facts: 9 make-10 bonds + 36 sums over 10 (a, b in 2..9). Mastered = 3 quick, correct answers in a row.
+  (function () {
+    let stats = {};
+    try { stats = (JSON.parse(localStorage.getItem('kraken-crossing-v1')) || {}).stats || {}; } catch (e) {}
+    const total = 45, keys = Object.keys(stats);
+    if (!keys.length) return;
+    const mastered = keys.filter(k => stats[k].streak >= 3).length;
+    const card = document.getElementById('kraken');
+    card.querySelector('.bar i').style.width = Math.round(mastered / total * 100) + '%';
+    card.querySelector('.progress small').textContent =
+      `${mastered} of ${total} facts mastered · ${keys.length} practised`;
+    card.querySelector('.play').textContent = 'Keep sailing ⛵';
+  })();
+</script>
 </body>
 </html>
