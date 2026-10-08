@@ -12,7 +12,7 @@ import { resetHud, addCoin, fillSlot, chestTarget } from './view/hud.js';
 import { runCompare, clearCompare } from './view/compare.js';
 import { makeItem } from './assets/loot.js';
 import { fxLayer } from './app.js';
-import { show, showSummary } from './dom.js';
+import { show, showSummary, setPlaying } from './dom.js';
 
 const easeIn = p => p * p;
 
@@ -28,7 +28,7 @@ export function startRound(level = settings.level) {
   clearTimers(); clearFx(); clearCompare(); clearRobbers();
   layout();
   resetHud();
-  show('quit', true);
+  show('quit', true); setPlaying(true);
   homePolice(); police.x = -2 * L.u;
   nextChase();
 }
@@ -121,14 +121,14 @@ function endRound() {
   S.phase = 'idle';
   clearRobbers(); homePolice();
   sfx.done();
-  show('quit', false);
+  show('quit', false); setPlaying(false);
   showSummary(S.catches, S.coins);
 }
 
 export function toMenu() {
   S.phase = 'idle';
   clearTimers(); clearFx(); clearCompare(); clearRobbers(); homePolice();
-  show('quit', false); show('summary', false); show('menu', true);
+  show('quit', false); show('summary', false); show('menu', true); setPlaying(false);
 }
 
 // How fast the street scrolls (u per second) in each phase.

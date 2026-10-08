@@ -1,0 +1,43 @@
+html, body { margin: 0; height: 100%; overflow: hidden; background: #06283d; touch-action: none;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; overscroll-behavior: none;
+  font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, sans-serif; }
+#game { position: fixed; inset: 0; }
+.overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: rgba(4, 30, 46, .85); z-index: 10; padding: 16px; box-sizing: border-box; overflow: auto; }
+.hidden { display: none !important; }
+.card { background: #fff8e7; color: #1d3557; border-radius: 28px; padding: 28px; max-width: 720px; width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4); box-sizing: border-box; }
+h1 { margin: 0 0 4px; font-size: 40px; }
+.crumb { display: inline-block; margin: 0 0 6px; color: inherit; opacity: .6; font-size: 16px; font-weight: 700; text-decoration: none; }
+.crumb img { width: 18px; height: 18px; border-radius: 5px; vertical-align: -3px; }
+h2 { margin: 0 0 12px; font-size: 34px; }
+.sub { margin: 0 0 20px; opacity: .75; font-size: 17px; }
+
+/* Level buttons are generated from js/levels.js; each sets its own --c colour. */
+.levels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .levels { grid-template-columns: 1fr; } }
+.lvl { border: 0; border-radius: 20px; padding: 16px 18px; text-align: left; color: #1d3557; font: inherit; cursor: pointer;
+  background: var(--c, #ffd166); box-shadow: 0 4px 0 rgba(0,0,0,.15); }
+.lvl:active { transform: translateY(3px); box-shadow: none; }
+.lvl b { display: block; font-size: 22px; margin-bottom: 4px; }
+.lvl span { font-size: 15px; opacity: .85; }
+
+.row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; align-items: center; }
+.pill { border: 2px solid #1d3557; background: transparent; color: #1d3557; border-radius: 999px; padding: 10px 16px;
+  font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; }
+.pill.on { background: #1d3557; color: #fff8e7; }
+.link { background: none; border: 0; color: #1d3557; opacity: .6; text-decoration: underline; font: inherit; font-size: 14px; cursor: pointer; margin-left: auto; }
+.note { font-size: 14px; opacity: .7; margin-top: 14px; line-height: 1.4; }
+.big { font-size: 56px; margin: 8px 0; }
+.primary { border: 0; border-radius: 18px; background: #ffd166; color: #1d3557; font: inherit; font-size: 22px; font-weight: 800;
+  padding: 14px 24px; cursor: pointer; box-shadow: 0 4px 0 rgba(0,0,0,.2); }
+
+/* In-game buttons */
+#go { position: fixed; z-index: 5; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom));
+  width: 132px; height: 104px; border: 0; border-radius: 26px; background: #06d6a0; color: #073b4c; font: inherit;
+  font-size: 30px; font-weight: 900; box-shadow: 0 6px 0 #04976f; cursor: pointer; }
+#go:active { transform: translateY(4px); box-shadow: 0 2px 0 #04976f; }
+#go:disabled { opacity: .35; }
+@media (max-width: 700px) { #go { width: 92px; height: 84px; font-size: 24px; } }
+#quit { position: fixed; z-index: 5; top: max(10px, env(safe-area-inset-top)); right: max(10px, env(safe-area-inset-right));
+  width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(29,53,87,.12); color: #1d3557; font-size: 20px; cursor: pointer; }
