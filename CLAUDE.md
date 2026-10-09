@@ -5,7 +5,7 @@ Small educational browser games for kids. Each game lives in its own folder with
 
 ## Games
 
-- `factorun/` — **Kraken Crossing**: steer a boat along a number line to answer
+- `krakens-crossing/` — **Krakens Crossing**: steer a boat along a number line to answer
   addition facts (make-10 bonds, bridging over 10). Uses PixiJS 8 from jsDelivr,
   Web Audio for sound and `localStorage` for progress.
   Touch-first: designed for phones/tablets in landscape or portrait.
@@ -18,7 +18,7 @@ Small educational browser games for kids. Each game lives in its own folder with
   `js/view/` (street, cars, HUD, compare panel). Saves totals under `robber-chase-v1`,
   which the root dashboard reads. Best in landscape.
 
-### Kraken Crossing layout (`factorun/`)
+### Krakens Crossing layout (`krakens-crossing/`)
 
 - `index.html` – markup only; `css/style.css` – menu/overlay/button styles.
 - `js/main.js` – entry: assembles the scene, wires the menu, runs the ticker loop.
@@ -53,12 +53,12 @@ No dependencies beyond Python 3:
 
 ```bash
 python3 -m http.server 8765 --bind 0.0.0.0   # from the repo root (games use ../update.js, ../icons/)
-# open http://localhost:8765/ (dashboard) or /factorun/
+# open http://localhost:8765/ (dashboard) or /krakens-crossing/
 ```
 
 Locally `__BUILD__` isn't stamped, so the update check stays off.
 
-`factorun/.claude/launch.json` and `robber-chase/.claude/launch.json` (port 8766) hold per-game
+`krakens-crossing/.claude/launch.json` and `robber-chase/.claude/launch.json` (port 8766) hold per-game
 configs for the Claude preview pane; serving from the root as above works for both.
 
 ## Checking changes

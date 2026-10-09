@@ -18,8 +18,9 @@
   :root { --ink: #1d3557; --paper: #fff8e7; --sea: #06283d; --sea2: #0b3c5d; --yellow: #ffd166; --green: #06d6a0;
     --blue: #8ecae6; --pink: #f4a3c4; }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; min-height: 100vh; color: var(--ink); background: radial-gradient(ellipse at top, var(--sea2), var(--sea) 70%) fixed;
+  html { -webkit-text-size-adjust: 100%; background: var(--sea); overscroll-behavior: none; }
+  body { margin: 0; min-height: 100vh; min-height: 100dvh; color: var(--ink); background: radial-gradient(ellipse at top, var(--sea2), var(--sea) 70%) fixed;
+    overscroll-behavior: none;
     font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, sans-serif;
     padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     -webkit-tap-highlight-color: transparent; }
@@ -76,14 +77,14 @@
   </header>
 
   <main class="grid">
-    <a class="game" href="factorun/" id="kraken">
+    <a class="game" href="krakens-crossing/" id="kraken">
       <div class="art kraken" aria-hidden="true">
         <span class="boat">⛵</span>
         <span class="big">🐙</span>
         <span class="waves">〰〰〰〰〰〰〰〰</span>
       </div>
       <div class="body">
-        <h2>Kraken Crossing</h2>
+        <h2>Krakens Crossing</h2>
         <p class="desc">Steer your boat to the right number and the kraken lets you through.</p>
         <div class="tags"><span class="tag">➕ Addition</span><span class="tag">🔟 Make 10</span><span class="tag">Ages 5–7</span></div>
         <div class="progress">
@@ -121,8 +122,9 @@
   <footer>build __BUILD__</footer>
 </div>
 
+<script src="scroll-guard.js"></script>
 <script>
-  // Kraken Crossing progress, read from the game's own save (same origin).
+  // Krakens Crossing progress, read from the game's own save (same origin).
   // Facts: 9 make-10 bonds + 36 sums over 10 (a, b in 2..9). Mastered = 3 quick, correct answers in a row.
   (function () {
     let stats = {};

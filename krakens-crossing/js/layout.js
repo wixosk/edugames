@@ -22,7 +22,8 @@ export function layout() {
   const eqY = dotsBottom + 18 + eqSize * .6;
   const topH = eqY + eqSize * .6 + 16;
   const botH = clamp(Ht * .16, 100, 140);
-  const reserve = W < 700 ? 116 : 168; // room for GO button
+  const reserve = W < 700 ? 116 : 168; // keep number lanes clear of the right-side control
+  document.getElementById('go').style.setProperty('--footer-height', `${botH}px`);
   Object.assign(L, { W, H: Ht, topH, botH, seaTop: topH, seaBot: Ht - botH, eqSize, eqY,
     laneL: Math.max(36, W * .05), laneR: W - reserve, boatY: Ht - botH - 64 });
   L.contactY = L.boatY - 62;   // beam line reaches the boat's nose

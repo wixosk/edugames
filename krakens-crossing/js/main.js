@@ -1,4 +1,4 @@
-// Kraken Crossing entry point: assemble the scene, wire the menu, run the loop.
+// Krakens Crossing entry point: assemble the scene, wire the menu, run the loop.
 import { app, seaLayer, world, ui } from './app.js';
 import { tickClock } from './clock.js';
 import { unlockAudio } from './audio.js';
