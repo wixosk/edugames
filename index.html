@@ -47,7 +47,17 @@
   .art.chase .robber { position: absolute; right: 14%; top: 30%; font-size: 52px; }
   .art.chase .loot { position: absolute; right: 34%; top: 46%; font-size: 34px; }
   @keyframes zoom { 50% { transform: scaleX(-1) translateX(-14px); } }
-  @media (prefers-reduced-motion: reduce) { .art .boat, .art.chase .cop { animation: none; } }
+  .art.bubbles { background: linear-gradient(#5ed3f3, #1b4965 88%, #f2cc8f 88%); }
+  .art.bubbles .b { position: absolute; display: flex; align-items: center; justify-content: center; border-radius: 50%;
+    font-weight: 900; color: #fff; -webkit-text-stroke: 2px #1d3557; paint-order: stroke fill;
+    background: radial-gradient(circle at 32% 30%, rgba(255,255,255,.9) 0 10%, rgba(189,224,254,.55) 12% 100%);
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,.9); animation: rise 3s ease-in-out infinite; }
+  .art.bubbles .b1 { left: 22%; top: 42%; width: 62px; height: 62px; font-size: 30px; }
+  .art.bubbles .b2 { left: 42%; top: 22%; width: 70px; height: 70px; font-size: 34px; animation-delay: -1s;
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,.9), 0 0 0 5px #ffd166; }
+  .art.bubbles .b3 { left: 64%; top: 46%; width: 58px; height: 58px; font-size: 28px; animation-delay: -2s; }
+  @keyframes rise { 50% { transform: translateY(-8px); } }
+  @media (prefers-reduced-motion: reduce) { .art .boat, .art.chase .cop, .art.bubbles .b { animation: none; } }
   .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
   .body h2 { margin: 0; font-size: 26px; }
   .body .desc { margin: 0; font-size: 16px; opacity: .8; line-height: 1.35; }
@@ -113,6 +123,23 @@
       </div>
     </a>
 
+    <a class="game" href="bubble-pop/" id="bubbles">
+      <div class="art bubbles" aria-hidden="true">
+        <span class="b b1">3</span>
+        <span class="b b2">7</span>
+        <span class="b b3">5</span>
+      </div>
+      <div class="body">
+        <h2>Bubble Pop</h2>
+        <p class="desc">Tap two bubbles that make 10 before they float away. How many can you pop in a minute?</p>
+        <div class="tags"><span class="tag">🔟 Make 10</span><span class="tag">⚡ Speed</span><span class="tag">Ages 5–8</span></div>
+        <div class="progress">
+          <small>No bubbles popped yet. Dive in!</small>
+        </div>
+        <span class="play">Play 🫧</span>
+      </div>
+    </a>
+
     <div class="soon">
       <div class="big">🧩</div>
       <b>More games coming soon</b>
@@ -148,6 +175,18 @@
     card.querySelector('.progress small').textContent =
       `${s.caught} robber${s.caught === 1 ? '' : 's'} caught · ${s.coins || 0} coins brought back`;
     card.querySelector('.play').textContent = 'Keep chasing 🚓';
+  })();
+
+  // Bubble Pop totals and best round, from the game's own save.
+  (function () {
+    let s = {};
+    try { s = JSON.parse(localStorage.getItem('bubble-pop-v1')) || {}; } catch (e) {}
+    if (!s.pairs) return;
+    const best = Math.max(0, ...Object.values(s.best || {}));
+    const card = document.getElementById('bubbles');
+    card.querySelector('.progress small').textContent =
+      `${s.pairs} pair${s.pairs === 1 ? '' : 's'} popped` + (best ? ` · best round ${best}` : '');
+    card.querySelector('.play').textContent = 'Keep popping 🫧';
   })();
 </script>
 <script src="update.js"></script>

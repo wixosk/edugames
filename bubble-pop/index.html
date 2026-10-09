@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="build" content="__BUILD__">
+<title>Bubble Pop</title>
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="../icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="game"></div>
+<button id="quit" class="hidden" aria-label="Back to menu">✕</button>
+
+<div id="menu" class="overlay">
+  <div class="card">
+    <a class="crumb" href="../">🎲 Edu Games ›</a>
+    <h1>🫧 Bubble Pop</h1>
+    <p class="sub">Tap two bubbles that make the number on the sign. Pop as many as you can!</p>
+    <div class="levels" id="levels"><!-- filled from js/levels.js --></div>
+    <p class="note">
+      <b>For grown-ups:</b> each round lasts one minute. Tap one bubble, then its partner: <b>3</b> and <b>7</b> make 10.
+      After the first tap the sign shows “3 + ? = 10” and a ten-frame with the gaps to fill.
+      A wrong pair just bounces apart and shows what it does make. Wait a moment and the right partner starts to glow.
+    </p>
+  </div>
+</div>
+
+<div id="summary" class="overlay hidden">
+  <div class="card" style="text-align:center">
+    <h2>Time's up! 🫧</h2>
+    <div class="big" id="sumScore">0</div>
+    <p class="sub" id="sumText"></p>
+    <p class="best hidden" id="sumBest">🏆 New best!</p>
+    <div class="row" style="justify-content:center">
+      <button class="primary" id="again">Pop again</button>
+      <button class="pill" id="toMenu">Menu</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@8.6.6/dist/pixi.min.js"></script>
+<script type="module" src="js/main.js"></script>
+<script src="../scroll-guard.js"></script>
+<script src="../update.js"></script>
+</body>
+</html>

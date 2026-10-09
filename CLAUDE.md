@@ -18,6 +18,14 @@ Small educational browser games for kids. Each game lives in its own folder with
   `js/view/` (street, cars, HUD, compare panel). Saves totals under `robber-chase-v1`,
   which the root dashboard reads. Best in landscape.
 
+- `bubble-pop/` — **Bubble Pop** (ages 5–8): numbered bubbles float up; tap two that make the target
+  (10, mixed 6–10, or 20) before they reach the top. One-minute arcade rounds; score = pairs popped,
+  with combos. After the first tap the sign turns into "3 + ? = 10" (with a ten-frame on easier levels),
+  a wrong pair shows what it does make, and the partner glows after a few seconds. No way to lose.
+  Same module split as Robber Chase: `js/levels.js` (targets, speed, decoy rate), `js/game.js` (spawning
+  + round flow), `js/view/` (sea, bubbles, HUD/sign). Saves `{pairs, rounds, best}` under `bubble-pop-v1`,
+  which the root dashboard reads.
+
 ### Krakens Crossing layout (`krakens-crossing/`)
 
 - `index.html` – markup only; `css/style.css` – menu/overlay/button styles.
@@ -58,7 +66,8 @@ python3 -m http.server 8765 --bind 0.0.0.0   # from the repo root (games use ../
 
 Locally `__BUILD__` isn't stamped, so the update check stays off.
 
-`krakens-crossing/.claude/launch.json` and `robber-chase/.claude/launch.json` (port 8766) hold per-game
+`krakens-crossing/.claude/launch.json`, `robber-chase/.claude/launch.json` (port 8766) and
+`bubble-pop/.claude/launch.json` (port 8767) hold per-game
 configs for the Claude preview pane; serving from the root as above works for both.
 
 ## Checking changes
